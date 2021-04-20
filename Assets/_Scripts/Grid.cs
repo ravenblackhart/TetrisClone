@@ -18,6 +18,7 @@ public class Grid : MonoBehaviour
 
     void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         updateScore = FindObjectOfType<UIManager>();
     }
 
@@ -87,15 +88,16 @@ public class Grid : MonoBehaviour
         {
             if (isRowFull(y))
             {
-                updateScore.currentScore += 1;
                 deleteRow(y);
                 decreaseRowsAbove(y + 1);
                 --y;
                 Debug.Log("Line Cleared");
+                updateScore.currentScore += 100;
             }
         }
 
     }
+
 
 
 

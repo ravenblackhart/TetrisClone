@@ -7,8 +7,8 @@ using UnityEngine.Events;
 
 public class Group : MonoBehaviour
 {
-   
 
+    public UIManager hiScore;
     
     // Time since last gravity tick
     float lastFall = 0;
@@ -55,7 +55,7 @@ public class Group : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-
+        hiScore = FindObjectOfType<UIManager>();
     
         // Default position not valid? Then it's game over
         if (!isValidGridPos())
@@ -63,7 +63,19 @@ public class Group : MonoBehaviour
             Debug.Log("GAME OVER");
             FindObjectOfType<UIManager>().GameOver.enabled = true;
 
-            Destroy(gameObject);
+            var prevHighscore = hiScore.prevScore;
+            var newHighscore = hiScore.currentScore;
+
+            if (newHighscore > prevHighscore)
+            {
+                //Save High Score
+                PlayerPrefs.SetFloat("High Score", newHighscore);
+                Debug.Log("High Score of " + newHighscore.ToString() + " saved");
+            }
+
+            //Print High Score
+            hiScore.HiScoreText.text = PlayerPrefs.GetFloat("High Score").ToString();
+
         }
 
 

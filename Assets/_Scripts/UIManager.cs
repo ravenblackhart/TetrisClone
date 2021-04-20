@@ -21,6 +21,7 @@ public class UIManager : MonoBehaviour
     public int prevScore;
     void Start()
     {
+        DontDestroyOnLoad(this.gameObject);
         Time.timeScale = 1f;
 
         //Disable Game UI Canvases
@@ -33,8 +34,8 @@ public class UIManager : MonoBehaviour
         ScoreText.text = currentScore.ToString();
 
         //Load Previous Hi Score
-        HiScoreText.text = prevScore.ToString();
-        
+        HiScoreText.text = PlayerPrefs.GetFloat("High Score").ToString();
+
         //Set initial score to 0 & display current score in game as 0
         currentScore = 0;
         ScoreText.text = currentScore.ToString();
@@ -72,4 +73,6 @@ public class UIManager : MonoBehaviour
     {
         Application.Quit();
     }
+
+  
 }
