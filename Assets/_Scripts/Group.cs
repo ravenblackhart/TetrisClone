@@ -9,6 +9,7 @@ public class Group : MonoBehaviour
 {
    
 
+    
     // Time since last gravity tick
     float lastFall = 0;
 
@@ -54,12 +55,13 @@ public class Group : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+
     
         // Default position not valid? Then it's game over
         if (!isValidGridPos())
         {
             Debug.Log("GAME OVER");
-            var test = FindObjectOfType<UIManager>().GameOver.enabled = true;
+            FindObjectOfType<UIManager>().GameOver.enabled = true;
 
             Destroy(gameObject);
         }
@@ -132,6 +134,7 @@ public class Group : MonoBehaviour
 
                 // Clear filled horizontal lines
                 Grid.DeleteFullRows();
+
             }
         }
 

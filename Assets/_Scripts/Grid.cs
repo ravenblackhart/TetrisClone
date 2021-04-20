@@ -1,6 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using UnityEngine.Events;
 
 public class Grid : MonoBehaviour
 {
@@ -9,6 +12,14 @@ public class Grid : MonoBehaviour
     public static int w = 10;
     public static int h = 20;
     public static Transform[,] grid = new Transform[w, h];
+
+    //Update Scores
+    public static UIManager updateScore;
+
+    void Start()
+    {
+        updateScore = FindObjectOfType<UIManager>();
+    }
 
     //Rounding Script
     public static Vector2 roundVec2(Vector2 v)
@@ -66,6 +77,7 @@ public class Grid : MonoBehaviour
             if (grid[x, y] == null)
                 return false;
         return true;
+
     }
 
     //Delete Full Rows 
@@ -75,12 +87,16 @@ public class Grid : MonoBehaviour
         {
             if (isRowFull(y))
             {
+                updateScore.currentScore += 1;
                 deleteRow(y);
                 decreaseRowsAbove(y + 1);
                 --y;
+                Debug.Log("Line Cleared");
             }
         }
+
     }
+
 
 
 
