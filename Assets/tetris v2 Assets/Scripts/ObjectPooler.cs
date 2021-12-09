@@ -50,14 +50,16 @@ namespace tetrisVersion2
             } 
             
             poolDictionary = new Dictionary<string, Queue<GameObject>>();
+            
             foreach (Pool pool in pools)
             {
                 Queue<GameObject> objectPool = new Queue<GameObject>(); 
                 for (int i = 0; i < pool.PoolSize; i++)
                 {
-                    GameObject tetromino = Instantiate(pool.ObjectPrefab);
-                    tetromino.SetActive(false);
-                    objectPool.Enqueue(tetromino);
+                    GameObject poolObject = Instantiate(pool.ObjectPrefab);
+                    DontDestroyOnLoad(poolObject);
+                    poolObject.SetActive(false);
+                    objectPool.Enqueue(poolObject);
                 }
     
                 poolDictionary.Add(pool.ObjectType, objectPool);

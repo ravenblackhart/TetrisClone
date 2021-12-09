@@ -169,6 +169,8 @@ public class Tetromino : MonoBehaviour
 
             lastFall = Time.time;
         }
+        
+        
     }
 
 

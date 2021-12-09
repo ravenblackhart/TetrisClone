@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
+// Using Singleton
 public class Grid : MonoBehaviour
 {
+    private static Grid instance; 
 
     //Setting up Grid
     public static int w = 10;
@@ -16,9 +19,19 @@ public class Grid : MonoBehaviour
     //Update Scores
     public static UIManager updateScore;
 
+    void Awake()
+    {
+        if (instance != null) Destroy(gameObject);
+        else 
+        { 
+            instance = this;
+            DontDestroyOnLoad(this.gameObject);
+        } 
+
+    }
+    
     void Start()
     {
-        DontDestroyOnLoad(this.gameObject);
         updateScore = FindObjectOfType<UIManager>();
     }
 
@@ -39,8 +52,13 @@ public class Grid : MonoBehaviour
     {
         for (int x = 0; x < w; ++x)
         {
-            Destroy(grid[x, y].gameObject);
+            Transform temp = grid[x, y].gameObject.transform.parent;
+            grid[x, y].gameObject.transform.parent = null; 
+            grid[x, y].gameObject.SetActive(false);
             grid[x, y] = null;
+            
+            if (temp.childCount == 0) Destroy(temp.gameObject);
+            
         }
     }
 

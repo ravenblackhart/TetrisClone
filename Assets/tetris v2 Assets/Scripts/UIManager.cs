@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -14,8 +15,8 @@ public class UIManager : MonoBehaviour
     public Canvas GameOver;
 
     [Header("Score Fields :")]
-    public Text ScoreText;
-    public Text HiScoreText;
+    public TextMeshProUGUI ScoreText;
+    public TextMeshProUGUI HiScoreText;
 
     public int currentScore;
     public int prevScore;
