@@ -1,50 +1,93 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
-//Using Object Pool Pattern
+//Using Object Pool Pattern + Singleton
 
-public class ObjectPooler : MonoBehaviour
+namespace tetrisVersion2
 {
-    [System.Serializable]
-    public class Pool
+    public class ObjectPooler : MonoBehaviour
     {
-        public string TetrominoName;
-        public GameObject TetriminoPrefab;
-        public int PoolSize; 
-    }
-
-    public List<Pool> pools;
-    public Dictionary<string, Queue<GameObject>> poolDictionary;
-
-    private void Start()
-    {
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
-        foreach (Pool pool in pools)
+        [System.Serializable]
+        public class Pool
         {
-            Queue<GameObject> objectPool = new Queue<GameObject>(); 
-            for (int i = 0; i < pool.PoolSize; i++)
-            {
-                GameObject tetromino = Instantiate(pool.TetriminoPrefab);
-                tetromino.SetActive(false);
-                objectPool.Enqueue(tetromino);
-            }
-
-            poolDictionary.Add(pool.TetrominoName, objectPool);
+            public string ObjectType;
+            public GameObject ObjectPrefab;
+            public int PoolSize; 
         }
+        
+        #region Singleton
+
+        private static ObjectPooler instance;
+        public static ObjectPooler ObjPoolerInstance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = FindObjectOfType<ObjectPooler>();
+                    if (ObjPoolerInstance == null)
+                    {
+                        GameObject objectPooler = new GameObject();
+                        objectPooler.name = "ObjectPooler";
+                        instance = objectPooler.AddComponent<ObjectPooler>(); 
+                        DontDestroyOnLoad(objectPooler);
+                    }
+                }
+
+                return instance;
+            }
+        }
+
+        private void Awake()
+        { 
+            if (instance != null) Destroy(gameObject);
+            else 
+            { 
+                instance = this;
+                DontDestroyOnLoad(this.gameObject);
+            } 
+            
+            poolDictionary = new Dictionary<string, Queue<GameObject>>();
+            foreach (Pool pool in pools)
+            {
+                Queue<GameObject> objectPool = new Queue<GameObject>(); 
+                for (int i = 0; i < pool.PoolSize; i++)
+                {
+                    GameObject tetromino = Instantiate(pool.ObjectPrefab);
+                    tetromino.SetActive(false);
+                    objectPool.Enqueue(tetromino);
+                }
+    
+                poolDictionary.Add(pool.ObjectType, objectPool);
+            }
+            
+        }
+    
+        #endregion
+    
+        public List<Pool> pools;
+        public Dictionary<string, Queue<GameObject>> poolDictionary;
+        [HideInInspector]public GameObject ObjectToSpawn; 
+        
+        public GameObject SpawnFromPool (string objectType)
+        {
+            if (!poolDictionary.ContainsKey(objectType))
+            {
+                Debug.LogWarning($"{objectType} does not exist");
+                return null;
+            }
+            
+            ObjectToSpawn = poolDictionary[objectType].Dequeue();
+            ObjectToSpawn.SetActive(true);
+
+            poolDictionary[objectType].Enqueue(ObjectToSpawn);
+    
+            return ObjectToSpawn;
+            
+            
+        } 
     }
 
-    public GameObject SpawnFromPool (string TetriminoType, Vector2 position, Quaternion rotation)
-    {
-        if (!poolDictionary.ContainsKey(TetriminoType)) return null;
-
-        GameObject objectToSpawn = poolDictionary[TetriminoType].Dequeue();
-        objectToSpawn.SetActive(true);
-        objectToSpawn.transform.position = position;
-        objectToSpawn.transform.rotation = rotation;
-
-        poolDictionary[TetriminoType].Enqueue(objectToSpawn);
-
-        return objectToSpawn;
-    } 
 }
