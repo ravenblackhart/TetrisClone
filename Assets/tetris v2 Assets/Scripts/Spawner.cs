@@ -12,7 +12,13 @@ namespace tetrisVersion2
 
         private ObjectPooler objectPooler;
         [SerializeField] private List<Tetromino> TetrominoTypes;
+        public static Spawner SpawnerInstance; 
 
+        void Awake()
+        {
+            SpawnerInstance = this; 
+        }
+        
         void Start()
         {
             objectPooler = ObjectPooler.ObjPoolerInstance; 

@@ -10,7 +10,7 @@ public class Grid : MonoBehaviour
 
     //Setting up Grid
     public static int w = 10;
-    public static int h = 20;
+    public static int h =18;
     public static Transform[,] grid = new Transform[w, h];
 
     //Update Scores

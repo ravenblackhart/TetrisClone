@@ -62,7 +62,7 @@ public class UIManager : MonoBehaviour
     //Restart Game
     public void Restart()
     {
-        SceneManager.LoadScene("tetris");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void Quit()
