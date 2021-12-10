@@ -75,6 +75,7 @@ public class UIManager : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        TetrisGrid.RefreshGrid(); 
     }
 
     public void Quit()

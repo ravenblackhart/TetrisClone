@@ -13,12 +13,12 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
 {
     private static UIManager uiManager;
     private static Spawner spawner;
-    private static ObjectPooler objectPooler; 
-    
+    private static ObjectPooler objectPooler;
+
 
     //Setting up Grid
     public static int w = 10;
-    public static int h =18;
+    public static int h = 18;
     public static Transform[,] grid = new Transform[w, h];
 
 
@@ -27,8 +27,7 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
         base.Awake();
         uiManager = FindObjectOfType<UIManager>();
         spawner = Spawner.Instance;
-        objectPooler = ObjectPooler.Instance; 
-
+        objectPooler = ObjectPooler.Instance;
     }
 
     public static void StartGame()
@@ -45,7 +44,7 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
     //insideBorder Helper 
     public static bool insideBorder(Vector2 pos)
     {
-        return ((int)pos.x >= 0 && (int)pos.x < w && (int)pos.y >= 0);
+        return ((int) pos.x >= 0 && (int) pos.x < w && (int) pos.y >= 0);
     }
 
     //Delete row
@@ -53,8 +52,8 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
     {
         for (int x = 0; x < w; ++x)
         {
-            GameObject temp = grid[x, y].gameObject; 
-            
+            GameObject temp = grid[x, y].gameObject;
+
             if (temp.transform.childCount > 0)
             {
                 temp.transform.DetachChildren();
@@ -63,7 +62,8 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
 
             while (grid[x, y] != null)
             {
-                GameObject returnable = grid[x, y].gameObject;; 
+                GameObject returnable = grid[x, y].gameObject;
+                
                 objectPooler.ReturnToPool(returnable);
                 grid[x, y] = null;
             }
@@ -94,7 +94,6 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
         {
             decreaseRow(i);
         }
-
     }
 
     //Is Row Full?
@@ -104,7 +103,6 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
             if (grid[x, y] == null)
                 return false;
         return true;
-
     }
 
     //Delete Full Rows 
@@ -121,18 +119,18 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
                 uiManager.currentScore += 100;
             }
         }
-
     }
 
     //Game Over
     public void GameOver()
     {
-        uiManager.GameOver.enabled = true; 
+        uiManager.GameOver.enabled = true;
         foreach (GameObject tetrominoGroup in GameObject.FindGameObjectsWithTag("Tetromino"))
         {
             tetrominoGroup.transform.DetachChildren();
-             Destroy(tetrominoGroup.gameObject);
+            Destroy(tetrominoGroup.gameObject);
         }
+
         Debug.Log("GAME OVER");
         FindObjectOfType<UIManager>().GameOver.enabled = true;
 
@@ -150,9 +148,13 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
         uiManager.HiScoreText.text = PlayerPrefs.GetFloat("High Score").ToString();
     }
 
-
-
-
-
-
+    public void RefreshGrid()
+    {
+        GameObject[] tempList = GameObject.FindGameObjectsWithTag("BaseTile");
+        foreach (GameObject returnable in tempList)
+        {
+            objectPooler.ReturnToPool(returnable);
+        }
+        
+    }
 }
