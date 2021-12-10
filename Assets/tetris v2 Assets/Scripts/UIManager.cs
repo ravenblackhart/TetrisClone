@@ -10,7 +10,8 @@ using UnityEngine.SceneManagement;
 public class UIManager : MonoBehaviour
 
 {
-    [Header("UI Canvas :")]
+    [Header("UI Canvas :")] 
+    public Canvas Ready;
     public Canvas GamePause;
     public Canvas GameOver;
 
@@ -22,7 +23,7 @@ public class UIManager : MonoBehaviour
     public int prevScore;
     void Start()
     {
-        Time.timeScale = 1f;
+        Time.timeScale = 0f;
 
         //Disable Game UI Canvases
         GamePause.enabled = false;
@@ -44,10 +45,20 @@ public class UIManager : MonoBehaviour
     {
         //Update Score
         ScoreText.text = currentScore.ToString();
+
+        if (GameOver.isActiveAndEnabled) Time.timeScale = 0f;
     }
+
+    public void Play()
+    {
+        Ready.enabled = false;
+        Time.timeScale = 1f; 
+        TetrisGrid.StartGame();
+    }
+    
     public void Pause()
     {
-        if (GamePause.isActiveAndEnabled)
+        if (GamePause.isActiveAndEnabled || Ready.isActiveAndEnabled)
         {
             GamePause.enabled = false;
             Time.timeScale = 1f; 

@@ -20,15 +20,15 @@ public class Group : MonoBehaviour
     {
         foreach (Transform child in transform)
         {
-            Vector2 v = Grid.roundVec2(child.position);
+            Vector2 v = TetrisGrid.roundVec2(child.position);
 
             // Not inside Border?
-            if (!Grid.insideBorder(v))
+            if (!TetrisGrid.insideBorder(v))
                 return false;
 
             // Block in grid cell (and not part of same group)?
-            if (Grid.grid[(int)v.x, (int)v.y] != null &&
-                Grid.grid[(int)v.x, (int)v.y].parent != transform)
+            if (TetrisGrid.grid[(int)v.x, (int)v.y] != null &&
+                TetrisGrid.grid[(int)v.x, (int)v.y].parent != transform)
                 return false;
         }
         return true;
@@ -38,17 +38,17 @@ public class Group : MonoBehaviour
     void updateGrid()
     {
         // Remove old children from grid
-        for (int y = 0; y < Grid.h; ++y)
-            for (int x = 0; x < Grid.w; ++x)
-                if (Grid.grid[x, y] != null)
-                    if (Grid.grid[x, y].parent == transform)
-                        Grid.grid[x, y] = null;
+        for (int y = 0; y < TetrisGrid.h; ++y)
+            for (int x = 0; x < TetrisGrid.w; ++x)
+                if (TetrisGrid.grid[x, y] != null)
+                    if (TetrisGrid.grid[x, y].parent == transform)
+                        TetrisGrid.grid[x, y] = null;
 
         // Add new children to grid
         foreach (Transform child in transform)
         {
-            Vector2 v = Grid.roundVec2(child.position);
-            Grid.grid[(int)v.x, (int)v.y] = child;
+            Vector2 v = TetrisGrid.roundVec2(child.position);
+            TetrisGrid.grid[(int)v.x, (int)v.y] = child;
         }
     }
 
@@ -145,7 +145,7 @@ public class Group : MonoBehaviour
                 transform.position += new Vector3(0, 1, 0);
 
                 // Clear filled horizontal lines
-                Grid.DeleteFullRows();
+                TetrisGrid.DeleteFullRows();
 
             }
         }
@@ -169,10 +169,10 @@ public class Group : MonoBehaviour
                 transform.position += new Vector3(0, 1, 0);
 
                 // Clear filled horizontal lines
-                Grid.DeleteFullRows();
+                TetrisGrid.DeleteFullRows();
 
                 // Spawn next Group
-                FindObjectOfType<Spawner>().spawnNext();
+                FindObjectOfType<XSpawner>().spawnNext();
                 
                 // Disable script
                 enabled = false;

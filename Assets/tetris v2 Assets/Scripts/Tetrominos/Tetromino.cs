@@ -8,18 +8,20 @@ namespace tetrisVersion2
 {
     public class Tetromino : MonoBehaviour
     {
+        private static Spawner spawner;
         public Color32 TetriminoColor;
         public List<Vector2Int> TilePositions;
 
-        private Spawner spawner;
+        
         private GameObject spawnedTile;
 
         private float lastFall = 0;
-        public UIManager hiScore;
+        private TetrisGrid tetrisGrid; 
 
         void Awake()
         {
-            spawner = Spawner.SpawnerInstance;
+            spawner = Spawner.Instance;
+            tetrisGrid = TetrisGrid.Instance;
             foreach (var tile in TilePositions)
             {
                 TileFactory.TileSpawn(this.gameObject, tile, TetriminoColor);
@@ -30,15 +32,15 @@ namespace tetrisVersion2
         {
             foreach (Transform child in transform)
             {
-                Vector2 v = Grid.roundVec2(child.position);
+                Vector2 v = TetrisGrid.roundVec2(child.position);
 
                 // Not inside Border?
-                if (!Grid.insideBorder(v))
+                if (!TetrisGrid.insideBorder(v))
                     return false;
 
                 // Block in grid cell (and not part of same group)?
-                if (Grid.grid[(int) v.x, (int) v.y] != null &&
-                    Grid.grid[(int) v.x, (int) v.y].parent != transform)
+                if (TetrisGrid.grid[(int) v.x, (int) v.y] != null &&
+                    TetrisGrid.grid[(int) v.x, (int) v.y].parent != transform)
                     return false;
             }
 
@@ -48,42 +50,27 @@ namespace tetrisVersion2
         void updateGrid()
         {
             // Remove old children from grid
-            for (int y = 0; y < Grid.h; ++y)
-            for (int x = 0; x < Grid.w; ++x)
-                if (Grid.grid[x, y] != null)
-                    if (Grid.grid[x, y].parent == transform)
-                        Grid.grid[x, y] = null;
+            for (int y = 0; y < TetrisGrid.h; ++y)
+            for (int x = 0; x < TetrisGrid.w; ++x)
+                if (TetrisGrid.grid[x, y] != null)
+                    if (TetrisGrid.grid[x, y].parent == transform)
+                        TetrisGrid.grid[x, y] = null;
 
             // Add new children to grid
             foreach (Transform child in transform)
             {
-                Vector2 v = Grid.roundVec2(child.position);
-                Grid.grid[(int) v.x, (int) v.y] = child;
+                Vector2 v = TetrisGrid.roundVec2(child.position);
+                TetrisGrid.grid[(int) v.x, (int) v.y] = child;
             }
         }
 
         void Start()
         {
-            hiScore = FindObjectOfType<UIManager>();
 
             // Default position not valid? Then it's game over
             if (!isValidGridPos())
             {
-                Debug.Log("GAME OVER");
-                FindObjectOfType<UIManager>().GameOver.enabled = true;
-
-                var prevHighscore = hiScore.prevScore;
-                var newHighscore = hiScore.currentScore;
-
-                if (newHighscore > prevHighscore)
-                {
-                    //Save High Score
-                    PlayerPrefs.SetFloat("High Score", newHighscore);
-                    Debug.Log("High Score of " + newHighscore.ToString() + " saved");
-                }
-
-                //Print High Score
-                hiScore.HiScoreText.text = PlayerPrefs.GetFloat("High Score").ToString();
+                tetrisGrid.GameOver();
             }
         }
 
@@ -150,7 +137,7 @@ namespace tetrisVersion2
                         transform.position += new Vector3(0, 1, 0);
 
                         // Clear filled horizontal lines
-                        Grid.DeleteFullRows();
+                        TetrisGrid.DeleteFullRows();
 
                     }
                 }
@@ -174,13 +161,25 @@ namespace tetrisVersion2
                         transform.position += new Vector3(0, 1, 0);
 
                         // Clear filled horizontal lines
-                        Grid.DeleteFullRows();
+                        TetrisGrid.DeleteFullRows();
 
                         // Spawn next Group
                         spawner.spawnNext();
 
                         // Disable script
-                        enabled = false;
+                        for (int i = 0; i <= this.gameObject.transform.childCount; i++)
+                        {
+                            gameObject.transform.DetachChildren();
+                        }
+
+                        if (gameObject.transform.childCount == 0)
+                        {
+                            Debug.Log($"{this.gameObject} is getting nuked");
+
+                            Destroy(this.gameObject);
+                        }
+                            
+                            
                     }
 
                     lastFall = Time.time;

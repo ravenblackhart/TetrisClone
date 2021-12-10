@@ -7,24 +7,16 @@ using Random = UnityEngine.Random;
 
 namespace tetrisVersion2
 {
-    public class Spawner : MonoBehaviour
+    public class Spawner : SingletonBoilerplate<Spawner>
     {
-
-        private ObjectPooler objectPooler;
         [SerializeField] private List<Tetromino> TetrominoTypes;
-        public static Spawner SpawnerInstance; 
 
-        void Awake()
+        public override void Awake()
         {
-            SpawnerInstance = this; 
-        }
-        
-        void Start()
-        {
-            objectPooler = ObjectPooler.ObjPoolerInstance; 
+            base.Awake();
             spawnNext();
         }
-        
+
         public void spawnNext()
         {
             int i = Random.Range(0, TetrominoTypes.Count);

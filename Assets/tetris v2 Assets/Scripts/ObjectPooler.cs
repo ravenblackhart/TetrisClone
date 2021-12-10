@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
 
-//Using Object Pool Pattern + Singleton
+//Using Object Pool Pattern
 
 namespace tetrisVersion2
 {
-    public class ObjectPooler : MonoBehaviour
+    public class ObjectPooler : SingletonBoilerplate<ObjectPooler>
     {
         [System.Serializable]
         public class Pool
@@ -17,38 +17,19 @@ namespace tetrisVersion2
             public int PoolSize; 
         }
         
-        #region Singleton
-
-        private static ObjectPooler instance;
-        public static ObjectPooler ObjPoolerInstance
+        public override void Awake()
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = FindObjectOfType<ObjectPooler>();
-                    if (ObjPoolerInstance == null)
-                    {
-                        GameObject objectPooler = new GameObject();
-                        objectPooler.name = "ObjectPooler";
-                        instance = objectPooler.AddComponent<ObjectPooler>(); 
-                        DontDestroyOnLoad(objectPooler);
-                    }
-                }
-
-                return instance;
-            }
+            base.Awake();
+            InstantiatePool();
         }
+        
+    
+        public List<Pool> pools;
+        public Dictionary<string, Queue<GameObject>> poolDictionary;
+        [HideInInspector]public GameObject ObjectToSpawn;
 
-        private void Awake()
-        { 
-            if (instance != null) Destroy(gameObject);
-            else 
-            { 
-                instance = this;
-                DontDestroyOnLoad(this.gameObject);
-            } 
-            
+        private void InstantiatePool()
+        {
             poolDictionary = new Dictionary<string, Queue<GameObject>>();
             
             foreach (Pool pool in pools)
@@ -64,16 +45,9 @@ namespace tetrisVersion2
     
                 poolDictionary.Add(pool.ObjectType, objectPool);
             }
-            
         }
-    
-        #endregion
-    
-        public List<Pool> pools;
-        public Dictionary<string, Queue<GameObject>> poolDictionary;
-        [HideInInspector]public GameObject ObjectToSpawn; 
         
-        public GameObject SpawnFromPool (string objectType)
+        public GameObject LoadFromPool (string objectType)
         {
             if (!poolDictionary.ContainsKey(objectType))
             {

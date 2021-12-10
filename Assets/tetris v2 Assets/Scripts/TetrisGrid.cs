@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using tetrisVersion2;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,32 +9,29 @@ using UnityEngine.EventSystems;
 using UnityEngine.Events;
 
 // Using Singleton
-public class Grid : MonoBehaviour
+public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
 {
-    private static Grid instance; 
+    private static UIManager uiManager;
+    private static Spawner spawner; 
+    
 
     //Setting up Grid
     public static int w = 10;
     public static int h =18;
     public static Transform[,] grid = new Transform[w, h];
 
-    //Update Scores
-    public static UIManager updateScore;
 
-    void Awake()
+    public override void Awake()
     {
-        if (instance != null) Destroy(gameObject);
-        else 
-        { 
-            instance = this;
-            DontDestroyOnLoad(this.gameObject);
-        } 
+        base.Awake();
+        uiManager = FindObjectOfType<UIManager>();
+        spawner = Spawner.Instance; 
 
     }
-    
-    void Start()
+
+    public static void StartGame()
     {
-        updateScore = FindObjectOfType<UIManager>();
+        spawner.spawnNext();
     }
 
     //Rounding Script
@@ -52,13 +51,8 @@ public class Grid : MonoBehaviour
     {
         for (int x = 0; x < w; ++x)
         {
-            Transform temp = grid[x, y].gameObject.transform.parent;
-            grid[x, y].gameObject.transform.parent = null; 
             grid[x, y].gameObject.SetActive(false);
             grid[x, y] = null;
-            
-            if (temp.childCount == 0) Destroy(temp.gameObject);
-            
         }
     }
 
@@ -110,10 +104,36 @@ public class Grid : MonoBehaviour
                 decreaseRowsAbove(y + 1);
                 --y;
                 Debug.Log("Line Cleared");
-                updateScore.currentScore += 100;
+                uiManager.currentScore += 100;
             }
         }
 
+    }
+
+    //Game Over
+    public void GameOver()
+    {
+        uiManager.GameOver.enabled = true; 
+        foreach (GameObject tetrominoGroup in GameObject.FindGameObjectsWithTag("Tetromino"))
+        {
+             tetrominoGroup.transform.DetachChildren();
+             Destroy(tetrominoGroup.gameObject);
+        }
+        Debug.Log("GAME OVER");
+        FindObjectOfType<UIManager>().GameOver.enabled = true;
+
+        var prevHighscore = uiManager.prevScore;
+        var newHighscore = uiManager.currentScore;
+
+        if (newHighscore > prevHighscore)
+        {
+            //Save High Score
+            PlayerPrefs.SetFloat("High Score", newHighscore);
+            Debug.Log("High Score of " + newHighscore.ToString() + " saved");
+        }
+
+        //Print High Score
+        uiManager.HiScoreText.text = PlayerPrefs.GetFloat("High Score").ToString();
     }
 
 
