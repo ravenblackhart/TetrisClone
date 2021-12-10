@@ -166,16 +166,14 @@ namespace tetrisVersion2
                         // Spawn next Group
                         spawner.spawnNext();
 
-                        // Disable script
+                        //Disable script
                         for (int i = 0; i <= this.gameObject.transform.childCount; i++)
                         {
                             gameObject.transform.DetachChildren();
                         }
-
+                        
                         if (gameObject.transform.childCount == 0)
                         {
-                            Debug.Log($"{this.gameObject} is getting nuked");
-
                             Destroy(this.gameObject);
                         }
                             

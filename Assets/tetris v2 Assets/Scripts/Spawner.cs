@@ -11,12 +11,6 @@ namespace tetrisVersion2
     {
         [SerializeField] private List<Tetromino> TetrominoTypes;
 
-        public override void Awake()
-        {
-            base.Awake();
-            spawnNext();
-        }
-
         public void spawnNext()
         {
             int i = Random.Range(0, TetrominoTypes.Count);

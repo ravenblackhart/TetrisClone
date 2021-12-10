@@ -28,16 +28,17 @@ public class SingletonBoilerplate<T> : MonoBehaviour where T : Component
 
     public virtual void Awake()
     {
-        if (instance == null)
+        if (instance != null && instance != this)
         {
-            instance = this as T; 
-            DontDestroyOnLoad(this.gameObject);
+            Debug.Log($"{gameObject} nuked");
+            Destroy(this.gameObject);
         }
 
         else
         {
-            Debug.Log($"{gameObject} nuked");
-            Destroy(gameObject);
+            instance = this.GetComponent<T>(); 
+            DontDestroyOnLoad(this.gameObject);
+            
         }
     }
     
