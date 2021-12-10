@@ -139,7 +139,5 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
         {
             objectPooler.ReturnToPool(returnable);
         }
-        Array.Clear(tempList, 0, tempList.Length);
-        tempList = null; 
     }
 }

@@ -22,10 +22,6 @@ namespace tetrisVersion2
         {
             spawner = Spawner.Instance;
             tetrisGrid = TetrisGrid.Instance;
-            foreach (var tile in TilePositions)
-            {
-                TileFactory.TileSpawn(this.gameObject, tile, TetriminoColor);
-            }
         }
 
         bool isValidGridPos()
@@ -66,12 +62,16 @@ namespace tetrisVersion2
 
         void Start()
         {
-
-            // Default position not valid? Then it's game over
+            foreach (var tile in TilePositions)
+            {
+                TileFactory.TileSpawn(this.gameObject, tile, TetriminoColor);
+            }
+            
             if (!isValidGridPos())
             {
                 tetrisGrid.GameOver();
             }
+
         }
 
         void Update()
@@ -164,7 +164,7 @@ namespace tetrisVersion2
                         TetrisGrid.DeleteFullRows();
 
                         // Spawn next Group
-                        spawner.spawnNext();
+                        if (isValidGridPos()) spawner.spawnNext();
 
                         //Disable script
                         for (int i = 0; i <= this.gameObject.transform.childCount; i++)

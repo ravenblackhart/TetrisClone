@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 // Using Singleton Pattern
@@ -30,7 +31,6 @@ public class SingletonBoilerplate<T> : MonoBehaviour where T : Component
     {
         if (instance != null && instance != this)
         {
-            Debug.Log($"{gameObject} nuked");
             Destroy(this.gameObject);
         }
 

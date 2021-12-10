@@ -16,20 +16,13 @@ namespace tetrisVersion2
             public GameObject ObjectPrefab;
             public int PoolSize; 
         }
-        
-        public override void Awake()
-        {
-            base.Awake();
-            InstantiatePool();
-        }
-        
-    
+
         public List<Pool> pools;
         public Dictionary<string, Queue<GameObject>> poolDictionary;
         [HideInInspector] public GameObject ObjectToSpawn;
-        [HideInInspector] public GameObject ObjectToReturn; 
+        [HideInInspector] public GameObject ObjectToReturn;
 
-        private void InstantiatePool()
+        public void InstantiatePool()
         {
             poolDictionary = new Dictionary<string, Queue<GameObject>>();
             
@@ -39,7 +32,6 @@ namespace tetrisVersion2
                 for (int i = 0; i < pool.PoolSize; i++)
                 {
                     GameObject poolObject = Instantiate(pool.ObjectPrefab);
-                    DontDestroyOnLoad(poolObject);
                     poolObject.SetActive(false);
                     objectPool.Enqueue(poolObject);
                 }
@@ -72,6 +64,13 @@ namespace tetrisVersion2
             poolDictionary[objectType].Enqueue(returnedObject);
 
             return ObjectToReturn; 
+            
+           
+        }
+
+        public void PoolMessage()
+        {
+            Debug.Log($"{poolDictionary["BaseTile"].Count} in pool");
         }
     }
 

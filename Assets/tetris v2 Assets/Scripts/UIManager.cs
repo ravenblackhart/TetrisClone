@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using tetrisVersion2;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,8 +21,16 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI ScoreText;
     public TextMeshProUGUI HiScoreText;
 
-    public int currentScore;
-    public int prevScore;
+    private int currentScore;
+    private int prevScore;
+
+    private void Awake()
+    {
+        
+        var objectPooler = ObjectPooler.Instance; 
+        objectPooler.InstantiatePool();
+    }
+
     void Start()
     {
         Time.timeScale = 0f;
@@ -85,8 +95,8 @@ public class UIManager : MonoBehaviour
     
     public void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         TetrisGrid.RefreshGrid(); 
+        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
     public void Quit()

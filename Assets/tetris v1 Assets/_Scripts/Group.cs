@@ -61,21 +61,7 @@ public class Group : MonoBehaviour
         if (!isValidGridPos())
         {
             Debug.Log("GAME OVER");
-            FindObjectOfType<UIManager>().GameOver.enabled = true;
-
-            var prevHighscore = hiScore.prevScore;
-            var newHighscore = hiScore.currentScore;
-
-            if (newHighscore > prevHighscore)
-            {
-                //Save High Score
-                PlayerPrefs.SetFloat("High Score", newHighscore);
-                Debug.Log("High Score of " + newHighscore.ToString() + " saved");
-            }
-
-            //Print High Score
-            hiScore.HiScoreText.text = PlayerPrefs.GetFloat("High Score").ToString();
-
+            
         }
 
 
