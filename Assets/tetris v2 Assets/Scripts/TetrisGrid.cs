@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -115,8 +116,7 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
                 deleteRow(y);
                 decreaseRowsAbove(y + 1);
                 --y;
-                Debug.Log("Line Cleared");
-                uiManager.currentScore += 100;
+                uiManager.UpdateScore();
             }
         }
     }
@@ -124,28 +124,12 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
     //Game Over
     public void GameOver()
     {
-        uiManager.GameOver.enabled = true;
+        uiManager.GameOver();
         foreach (GameObject tetrominoGroup in GameObject.FindGameObjectsWithTag("Tetromino"))
         {
             tetrominoGroup.transform.DetachChildren();
             Destroy(tetrominoGroup.gameObject);
         }
-
-        Debug.Log("GAME OVER");
-        FindObjectOfType<UIManager>().GameOver.enabled = true;
-
-        var prevHighscore = uiManager.prevScore;
-        var newHighscore = uiManager.currentScore;
-
-        if (newHighscore > prevHighscore)
-        {
-            //Save High Score
-            PlayerPrefs.SetFloat("High Score", newHighscore);
-            Debug.Log("High Score of " + newHighscore.ToString() + " saved");
-        }
-
-        //Print High Score
-        uiManager.HiScoreText.text = PlayerPrefs.GetFloat("High Score").ToString();
     }
 
     public static void RefreshGrid()
@@ -155,6 +139,7 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
         {
             objectPooler.ReturnToPool(returnable);
         }
-        
+        Array.Clear(tempList, 0, tempList.Length);
+        tempList = null; 
     }
 }

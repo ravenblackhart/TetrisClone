@@ -11,9 +11,9 @@ public class UIManager : MonoBehaviour
 
 {
     [Header("UI Canvas :")] 
-    public Canvas Ready;
-    public Canvas GamePause;
-    public Canvas GameOver;
+    public Canvas ReadyCanvas;
+    public Canvas GamePauseCanvas;
+    public Canvas GameOverCanvas;
 
     [Header("Score Fields :")]
     public TextMeshProUGUI ScoreText;
@@ -26,8 +26,8 @@ public class UIManager : MonoBehaviour
         Time.timeScale = 0f;
 
         //Disable Game UI Canvases
-        GamePause.enabled = false;
-        GameOver.enabled = false;
+        GamePauseCanvas.enabled = false;
+        GameOverCanvas.enabled = false;
         currentScore = 0;
 
         //Set initial score to 0 & display current score in game as 0
@@ -35,43 +35,54 @@ public class UIManager : MonoBehaviour
         ScoreText.text = currentScore.ToString();
 
         //Load Previous Hi Score
-        HiScoreText.text = PlayerPrefs.GetFloat("High Score").ToString();
+        HiScoreText.text = PlayerPrefs.GetFloat("HighScore").ToString();
 
 
     }
 
 
-    void Update()
+    public void UpdateScore()
     {
-        //Update Score
+        currentScore += 100; 
         ScoreText.text = currentScore.ToString();
-
-        if (GameOver.isActiveAndEnabled) Time.timeScale = 0f;
     }
 
     public void Play()
     {
-        Ready.enabled = false;
+        ReadyCanvas.enabled = false;
         Time.timeScale = 1f; 
         TetrisGrid.StartGame();
     }
     
     public void Pause()
     {
-        if (GamePause.isActiveAndEnabled || Ready.isActiveAndEnabled)
+        if (GamePauseCanvas.isActiveAndEnabled || ReadyCanvas.isActiveAndEnabled)
         {
-            GamePause.enabled = false;
+            GamePauseCanvas.enabled = false;
             Time.timeScale = 1f; 
         }
         
         else
         {
-            GamePause.enabled = true;
+            GamePauseCanvas.enabled = true;
             Time.timeScale = 0f;
         }
     }
 
-    //Restart Game
+    public void GameOver()
+    {
+        GameOverCanvas.enabled = true;
+        Time.timeScale = 0f;
+
+        if (currentScore > PlayerPrefs.GetFloat("HighScore"))
+        {
+            PlayerPrefs.SetFloat("HighScore", currentScore);
+            Debug.Log("High Score of " + currentScore.ToString() + " saved");
+        }
+        
+        
+    }
+    
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
