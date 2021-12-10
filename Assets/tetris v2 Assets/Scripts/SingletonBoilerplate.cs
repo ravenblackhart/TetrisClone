@@ -16,7 +16,7 @@ public class SingletonBoilerplate<T> : MonoBehaviour where T : Component
                 instance = FindObjectOfType<T>();
                 if (instance == null)
                 {
-                    GameObject obj = new GameObject();
+                    GameObject obj = Instantiate(new GameObject());
                     obj.name = typeof(T).Name;
                     instance = obj.AddComponent<T>();
                 }
@@ -36,6 +36,7 @@ public class SingletonBoilerplate<T> : MonoBehaviour where T : Component
 
         else
         {
+            Debug.Log($"{gameObject} nuked");
             Destroy(gameObject);
         }
     }

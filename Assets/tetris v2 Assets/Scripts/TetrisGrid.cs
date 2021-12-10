@@ -116,7 +116,7 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
         uiManager.GameOver.enabled = true; 
         foreach (GameObject tetrominoGroup in GameObject.FindGameObjectsWithTag("Tetromino"))
         {
-             tetrominoGroup.transform.DetachChildren();
+            tetrominoGroup.transform.DetachChildren();
              Destroy(tetrominoGroup.gameObject);
         }
         Debug.Log("GAME OVER");

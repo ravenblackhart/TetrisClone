@@ -179,7 +179,6 @@ namespace tetrisVersion2
                             Destroy(this.gameObject);
                         }
                             
-                            
                     }
 
                     lastFall = Time.time;
