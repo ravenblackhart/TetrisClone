@@ -12,7 +12,8 @@ using UnityEngine.Events;
 public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
 {
     private static UIManager uiManager;
-    private static Spawner spawner; 
+    private static Spawner spawner;
+    private static ObjectPooler objectPooler; 
     
 
     //Setting up Grid
@@ -25,7 +26,8 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
     {
         base.Awake();
         uiManager = FindObjectOfType<UIManager>();
-        spawner = Spawner.Instance; 
+        spawner = Spawner.Instance;
+        objectPooler = ObjectPooler.Instance; 
 
     }
 
@@ -51,8 +53,20 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
     {
         for (int x = 0; x < w; ++x)
         {
-            grid[x, y].gameObject.SetActive(false);
-            grid[x, y] = null;
+            GameObject temp = grid[x, y].gameObject; 
+            
+            if (temp.transform.childCount > 0)
+            {
+                temp.transform.DetachChildren();
+                Destroy(temp);
+            }
+
+            while (grid[x, y] != null)
+            {
+                GameObject returnable = grid[x, y].gameObject;; 
+                objectPooler.ReturnToPool(returnable);
+                grid[x, y] = null;
+            }
         }
     }
 

@@ -26,7 +26,8 @@ namespace tetrisVersion2
     
         public List<Pool> pools;
         public Dictionary<string, Queue<GameObject>> poolDictionary;
-        [HideInInspector]public GameObject ObjectToSpawn;
+        [HideInInspector] public GameObject ObjectToSpawn;
+        [HideInInspector] public GameObject ObjectToReturn; 
 
         private void InstantiatePool()
         {
@@ -58,11 +59,23 @@ namespace tetrisVersion2
             ObjectToSpawn = poolDictionary[objectType].Dequeue();
             ObjectToSpawn.SetActive(true);
 
-            poolDictionary[objectType].Enqueue(ObjectToSpawn);
+            //poolDictionary[objectType].Enqueue(ObjectToSpawn);
     
             return ObjectToSpawn;
 
-        } 
+        }
+
+        public GameObject ReturnToPool(GameObject returnedObject)
+        {
+            ObjectToReturn = returnedObject; 
+            
+            ObjectToReturn.SetActive(false);
+            string objectType = ObjectToReturn.tag;
+            Debug.Log($"{objectType} being returned");
+            poolDictionary[objectType].Enqueue(ObjectToReturn);
+
+            return ObjectToReturn; 
+        }
     }
 
 }

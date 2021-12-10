@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 2757116191445108020}
   - component: {fileID: 2918258069257689654}
   m_Layer: 0
-  m_Name: BaseBlock
-  m_TagString: Untagged
+  m_Name: BaseTile
+  m_TagString: BaseTile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
