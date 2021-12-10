@@ -2061,7 +2061,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 949109149}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ecc69d783bf741345a57dee42e86e5b3, type: 3}
+  m_Script: {fileID: 11500000, guid: 9d6ff3434495f164984632b6de021f9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &949109151
@@ -4167,7 +4167,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1752487814}
         m_TargetAssemblyTypeName: UIManager, Assembly-CSharp
-        m_MethodName: Pause
+        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
