@@ -148,7 +148,7 @@ public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
         uiManager.HiScoreText.text = PlayerPrefs.GetFloat("High Score").ToString();
     }
 
-    public void RefreshGrid()
+    public static void RefreshGrid()
     {
         GameObject[] tempList = GameObject.FindGameObjectsWithTag("BaseTile");
         foreach (GameObject returnable in tempList)

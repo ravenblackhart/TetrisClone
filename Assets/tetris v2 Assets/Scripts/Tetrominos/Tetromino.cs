@@ -170,12 +170,13 @@ namespace tetrisVersion2
                         for (int i = 0; i <= this.gameObject.transform.childCount; i++)
                         {
                             gameObject.transform.DetachChildren();
+                            if (gameObject.transform.childCount == 0)
+                            {
+                                Destroy(this.gameObject);
+                            }
                         }
                         
-                        if (gameObject.transform.childCount == 0)
-                        {
-                            Destroy(this.gameObject);
-                        }
+                        
                             
                     }
 

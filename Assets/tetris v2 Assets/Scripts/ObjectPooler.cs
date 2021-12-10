@@ -72,7 +72,7 @@ namespace tetrisVersion2
             ObjectToReturn.SetActive(false);
             string objectType = ObjectToReturn.tag;
             Debug.Log($"{objectType} being returned");
-            poolDictionary[objectType].Enqueue(ObjectToReturn);
+            poolDictionary[objectType].Enqueue(returnedObject);
 
             return ObjectToReturn; 
         }
