@@ -1,13 +1,6 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using tetrisVersion2;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.EventSystems;
-using UnityEngine.Events;
 
 // Using Singleton
 public class TetrisGrid : SingletonBoilerplate<TetrisGrid>
