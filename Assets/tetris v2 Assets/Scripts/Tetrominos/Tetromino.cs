@@ -176,8 +176,6 @@ namespace tetrisVersion2
                             }
                         }
                         
-                        
-                            
                     }
 
                     lastFall = Time.time;

@@ -55,12 +55,10 @@ namespace tetrisVersion2
                 Debug.LogWarning($"{objectType} does not exist");
                 return null;
             }
-            
+
             ObjectToSpawn = poolDictionary[objectType].Dequeue();
             ObjectToSpawn.SetActive(true);
 
-            //poolDictionary[objectType].Enqueue(ObjectToSpawn);
-    
             return ObjectToSpawn;
 
         }
@@ -71,7 +69,6 @@ namespace tetrisVersion2
             
             ObjectToReturn.SetActive(false);
             string objectType = ObjectToReturn.tag;
-            Debug.Log($"{objectType} being returned");
             poolDictionary[objectType].Enqueue(returnedObject);
 
             return ObjectToReturn; 
